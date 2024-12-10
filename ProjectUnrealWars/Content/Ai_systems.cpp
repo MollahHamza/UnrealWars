@@ -141,8 +141,7 @@ void AYourAICharacter::FireAtPlayer(ACharacter* TargetActor)
         // Log a message to simulate the "Fire" event
         UE_LOG(LogTemp, Warning, TEXT("Firing at Player!"));
 
-        // Additional logic to perform any attack or other interaction goes here
-        // (e.g., dealing damage, playing animations, etc.)
+     
     }
 }
 
@@ -190,8 +189,6 @@ void AMyCharacter::Fire()
         {
             UGameplayStatics::ApplyDamage(HitActor, BaseDamage, GetController(), this, nullptr);
         }
-
-        // Spawn impact effect (not shown in the blueprint, but commonly done)
-        // UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ImpactEffect, Hit.ImpactPoint, Hit.ImpactNormal.Rotation());
+);
     }
 }
