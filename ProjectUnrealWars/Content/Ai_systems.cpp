@@ -39,7 +39,7 @@ void AYourAICharacter::SearchAround()
     // Set a delay to call SearchAround again (using a timer)
     GetWorld()->GetTimerManager().SetTimer(SearchHandle, this, &AYourAICharacter::SearchAround, 0.1f, false);
 }
-// Constructor
+
 AYourCharacter::AYourCharacter()
 {
     // Initialize default health
@@ -53,8 +53,6 @@ AYourCharacter::AYourCharacter()
     CharacterMovement = CreateDefaultSubobject<UCharacterMovementComponent>(TEXT("CharacterMovement"));
     CharacterMovement->SetupAttachment(RootComponent);
 }
-
-
 
 // Function to handle any damage
 void AYourCharacter::ReceiveDamage(float DamageAmount)
@@ -90,8 +88,6 @@ void AYourCharacter::HandleZeroHealth()
         CharacterMovement->SetMovementMode(EMovementMode::MOVE_None);
     }
 }
-
-// Constructor
 AYourAICharacter::AYourAICharacter()
 {
     // Set up Pawn Sensing component
@@ -101,6 +97,11 @@ AYourAICharacter::AYourAICharacter()
     // Initialize variables (if any)
 }
 
+// Called when the game starts or when spawned
+void AYourAICharacter::BeginPlay()
+{
+    Super::BeginPlay();
+}
 
 // Function to handle seeing a Pawn (called when the AI sees another pawn)
 void AYourAICharacter::OnSeePawn(APawn* Pawn)
@@ -142,5 +143,55 @@ void AYourAICharacter::FireAtPlayer(ACharacter* TargetActor)
 
         // Additional logic to perform any attack or other interaction goes here
         // (e.g., dealing damage, playing animations, etc.)
+    }
+}
+
+MyCharacter::AMyCharacter()
+{
+    RifleMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("RifleMesh"));
+    RifleMesh->SetupAttachment(GetMesh());
+
+    MuzzleSocketName = "b_gun_muzzleflash";
+    WeaponRange = 3000.0f;
+    BaseDamage = 1.0f;
+}
+
+void AMyCharacter::Fire()
+{
+    if (!RifleMesh) return;
+
+    // Spawn muzzle flash
+    UGameplayStatics::SpawnEmitterAttached(MuzzleFlash, RifleMesh, MuzzleSocketName);
+
+    // Get muzzle location and rotation
+    FVector MuzzleLocation = RifleMesh->GetSocketLocation(MuzzleSocketName);
+    FRotator MuzzleRotation = RifleMesh->GetSocketRotation(MuzzleSocketName);
+
+    // Calculate end location
+    FVector ShotDirection = MuzzleRotation.Vector();
+    FVector EndLocation = MuzzleLocation + (ShotDirection * WeaponRange);
+
+    // Perform line trace
+    FCollisionQueryParams QueryParams;
+    QueryParams.AddIgnoredActor(this);
+    QueryParams.bTraceComplex = true;
+
+    FHitResult Hit;
+    bool bHit = GetWorld()->LineTraceSingleByChannel(Hit, MuzzleLocation, EndLocation, ECC_Visibility, QueryParams);
+
+    // Draw debug line
+    DrawDebugLine(GetWorld(), MuzzleLocation, EndLocation, FColor::Red, false, 1.0f, 0, 1.0f);
+
+    if (bHit)
+    {
+        // Apply damage
+        AActor* HitActor = Hit.GetActor();
+        if (HitActor)
+        {
+            UGameplayStatics::ApplyDamage(HitActor, BaseDamage, GetController(), this, nullptr);
+        }
+
+        // Spawn impact effect (not shown in the blueprint, but commonly done)
+        // UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ImpactEffect, Hit.ImpactPoint, Hit.ImpactNormal.Rotation());
     }
 }
