@@ -1,7 +1,7 @@
 # CS150 Game Project
 
 ## Description
-This is a third-person game developed as part of the **CS150** course at **Shahjalal University of Science and Technology (SUST)**. It is a small project designed to fulfill the course requirements.
+This is a third-person game developed as part of the **CS150** course at **Shahjalal University of Science and Technology (SUST)**. It is a project designed to fulfill the course requirements.
 
 ## Credits
 Developed by:  
