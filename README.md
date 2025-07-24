@@ -6,4 +6,4 @@ This is a third-person game developed as part of the **CS150** course at **Shahj
 ## Credits
 Developed by:  
 - **Mollah Omar Hamza** (Reg: 2022331066)  
-- **Ahmed Ishtiaque** (Reg: 2022331100)  
+- **Ahmed Istiaque** (Reg: 2022331100)  
